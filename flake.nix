@@ -13,13 +13,26 @@
       # the packages and versions (python3, poetry etc.) from our pinned nixpkgs above:
       inherit (poetry2nix.lib.mkPoetry2Nix { inherit pkgs; }) mkPoetryApplication;
       myPythonApp = mkPoetryApplication { projectDir = ./.; };
+    
     in
     {
       apps.${system}.default = {
         type = "app";
         # replace <script> with the name in the [tool.poetry.scripts] section of your pyproject.toml
-        program = "${myPythonApp}/main.py";
+        program = "${myPythonApp}/bin/main";
       };
+
+      devShells.x86_64-linux.default = nixpkgs.legacyPackages.x86_64-linux.mkShell {
+
+         package = with pkgs; [
+           python39
+	   git
+	   
+
+	 ];
+
+      };
+
     };
 }
 
